@@ -1,0 +1,6 @@
+name = WO Test
+description = Test
+package = WAVEO-CONNECT2.0-Test
+version = "7.x-2.0-alpha"
+core = 7.x
+

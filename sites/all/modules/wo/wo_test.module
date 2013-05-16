@@ -1,0 +1,50 @@
+<?php 
+
+/**
+ * Implements hook_menu().
+ */
+function wo_test_menu() {
+  $items['test/fire'] = array(
+    'title' => t('Test Fire Event'),
+    'page callback' => 'wo_test_fire',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function wo_test_fire() {
+  $eventdata = array(
+    'title' => t('Test Fire Event'),
+    'page callback' => 'wo_test_fire',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  
+  var_dump(wo_test_fire_event('eventName', $eventdata, 'callbackFunctioName', array('key' => 'value')));
+}
+
+
+/**
+ * WO Drupal Magical Event
+ */
+function wo_test_fire_event($eventName, $eventData=array(), $callback=null, $options=array()) {
+  $time = explode ( ' ', microtime () );
+  $time = $time [1] . ($time [0] * 100000000);
+  global $user;
+  $options += array(
+    'uid' => $user->uid,
+  );
+  $payload = json_encode(array(
+    'event' => $eventName,
+    'data' => $eventData,
+    'callback' => $callback,
+    'options' => $options,
+    'microtime' => $time,
+  ));
+  
+  $file = fopen('/home/web/inotifytest/proc/event_'.$time.'.json', 'w');
+  fwrite($file, $payload);
+  fclose($file);
+}
+
